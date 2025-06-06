@@ -1,25 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
+using VectoDigital.Core.Enums;
+using VectoDigital.Core.Interfaces;
+using VectoDigital.Core.Models.Images;
 
 namespace VectoDigital.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ImagesController : ControllerBase
+    public class ImagesController(IImagesService imagesService) : ControllerBase
     {
-        public ImagesController()
+        private readonly IImagesService _imagesService = imagesService;
+
+        [HttpGet]
+        public IActionResult GetImages()
         {
+            var data = _imagesService.GetImages();
+            return Ok(data);
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public Task<IActionResult> GetImages()
+        [HttpPost("/{imageId}/[action]")]
+        public IActionResult SetPlugins(int imageId, [FromBody] ImagePlugin[] pluginsIds)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var image = _imagesService.SetPlugins(imageId, pluginsIds);
+            return Ok(image);
+        }
+
+        [HttpPost("/{imageId}/[action]")]
+        public IActionResult Manipulate(int imageId, [FromBody] ImageManipulationRequest req)
+        {
+            var data = _imagesService.Manipulate(imageId, req);
+            return Ok(data);
         }
     }
 }
