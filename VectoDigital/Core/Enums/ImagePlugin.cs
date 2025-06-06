@@ -4,10 +4,6 @@
     {
         Resize,
         Blur,
-        Radius,
-        ConvertToGrayscale,
-        Effect1,
-        Effect2,
-        Effect3
+        Rotation
     }
 }

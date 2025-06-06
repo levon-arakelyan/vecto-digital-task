@@ -27,16 +27,20 @@ namespace VectoDigital.Services
         {
             var image = Get(imageId);
 
+            // TODO:
+            // better to move this checks to manipluation classes for easy scalability
+            // have list of all manipulation classes, iterate over them and call appropriate methods to check and apply manipulation to image
+
             var imageProcessor = new ImageProcessor();
-            if (request.RotationAngle.HasValue)
+            if (request.RotationAngle.HasValue && image.Plugins.Contains(ImagePlugin.Rotation))
             {
                 imageProcessor.AddManipulation(new RotateManipulation(request.RotationAngle.Value));
             }
-            if (request.ResizeMetrics != null)
+            if (request.ResizeMetrics != null && image.Plugins.Contains(ImagePlugin.Resize))
             {
                 imageProcessor.AddManipulation(new ResizeManipulation(request.ResizeMetrics.Item1, request.ResizeMetrics.Item2));
             }
-            if (request.BlurSize.HasValue)
+            if (request.BlurSize.HasValue && image.Plugins.Contains(ImagePlugin.Blur))
             {
                 imageProcessor.AddManipulation(new BlurManipulation(request.BlurSize.Value));
             }
